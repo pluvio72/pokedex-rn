@@ -2,10 +2,10 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import Layout from '../../components/layout';
 
-const Details = () => {
+const Details = props => {
   return (
     <Layout>
-      <Text>Details</Text>
+      <Text>{props.name}</Text>
     </Layout>
   );
 };

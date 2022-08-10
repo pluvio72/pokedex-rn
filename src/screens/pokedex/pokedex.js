@@ -1,25 +1,22 @@
 import React, {useEffect} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import {FlatList} from 'react-native';
 import Layout from '../../components/layout';
 import {getPokemon, getPokemonByGeneration} from '../../services/pokemonAPI';
 import {useDispatch, useSelector} from 'react-redux';
 import {ADD_POKEMON} from '../../redux/actions';
 import styles from './pokedex.styles';
+import PokemonCard from '../../components/pokemonCard';
+import {Navigation} from 'react-native-navigation';
+import {DETAILS_SCREEN} from '../../navigation/screens';
 
 const selectPokemon = state => state.pokemon;
 
-const PokemonEntry = pokemonData => {
-  return (
-    <View style={styles.pokemon}>
-      <Text>{pokemonData}</Text>
-    </View>
-  );
-};
-
-const Pokedex = () => {
+const Pokedex = props => {
   const dispatch = useDispatch();
   const pokemon = useSelector(selectPokemon);
 
+  // GET POKEMON FROM FIRST GENERATION AND DISPATCH
+  // ACTION TO SAVE THEM TO STORE
   useEffect(() => {
     getPokemonByGeneration(1).then(pokemonList => {
       if (pokemonList) {
@@ -39,21 +36,33 @@ const Pokedex = () => {
     });
   }, []);
 
+  const navigateToPokemonDetails = (name, data) => {
+    console.log('NAVIGATE');
+    Navigation.push(props.componentId, {
+      component: {
+        name: DETAILS_SCREEN,
+        passProps: {
+          name,
+          data,
+        },
+      },
+    });
+  };
+
   return (
     <Layout>
       {Object.values(pokemon).length > 0 && (
         <FlatList
           style={styles.container}
           data={Object.values(pokemon)}
-          numColumns={2}
+          numColumns={1}
           horizontal={false}
           renderItem={({item}) => {
             return (
-              <View style={styles.pokemon}>
-                <Text style={styles.pokemonName}>
-                  {item.name.toUpperCase()}
-                </Text>
-              </View>
+              <PokemonCard
+                item={item}
+                onPress={() => navigateToPokemonDetails(item.name, item)}
+              />
             );
           }}
           keyExtractor={item => item.name}

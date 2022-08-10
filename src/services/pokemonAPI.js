@@ -33,7 +33,23 @@ async function getPokemonDetails(name) {
     return formatPokemonDetails(json);
   } catch (error) {
     console.log(`No details for pokemon: ${name}.`);
-    return {};
+    return {
+      base_experience: 'unknown???',
+      height: 'unknown???',
+      id: null,
+      species_name: 'unknown???',
+      weight: 'unknown???',
+      generations: 'NA',
+      forms: ['unknown???'],
+      stats: {
+        hp: {base_stat: 'NA'},
+        attack: {base_stat: 'NA'},
+        defense: {base_stat: 'NA'},
+      },
+      image:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/925px-Unknown_person.jpg',
+      types: ['unknown???'],
+    };
   }
 }
 

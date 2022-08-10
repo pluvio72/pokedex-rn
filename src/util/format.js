@@ -31,20 +31,12 @@ function formatPokemonDetails(data) {
           [e.stat.name]: {base_stat: e.base_stat, effort: e.effort},
         })),
       ),
+      image:
+        data.sprites.other['official-artwork'].front_default ??
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/925px-Unknown_person.jpg',
       types: data.types.map(e => e.type.name),
     };
   }
-  return {
-    base_experience: 'unknown???',
-    height: 'unknown???',
-    id: null,
-    species_name: 'unknown???',
-    weight: 'unknown???',
-    generations: 'NA',
-    forms: ['unknown???'],
-    stats: {},
-    types: ['unknown???'],
-  };
 }
 
 export {formatPokemonBasicInfo, formatPokemonDetails};
