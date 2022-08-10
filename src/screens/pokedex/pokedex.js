@@ -1,7 +1,11 @@
-import React, {useEffect} from 'react';
-import {FlatList} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {FlatList, TextInput, View} from 'react-native';
 import Layout from '../../components/layout';
-import {getPokemon, getPokemonByGeneration} from '../../services/pokemonAPI';
+import {
+  getPokemon,
+  getPokemonByGeneration,
+  searchForPokemon,
+} from '../../services/pokemonAPI';
 import {useDispatch, useSelector} from 'react-redux';
 import {ADD_POKEMON} from '../../redux/actions';
 import styles from './pokedex.styles';
@@ -14,6 +18,8 @@ const selectPokemon = state => state.pokemon;
 const Pokedex = props => {
   const dispatch = useDispatch();
   const pokemon = useSelector(selectPokemon);
+
+  const [filter, setFilter] = useState('');
 
   // GET POKEMON FROM FIRST GENERATION AND DISPATCH
   // ACTION TO SAVE THEM TO STORE
@@ -37,7 +43,6 @@ const Pokedex = props => {
   }, []);
 
   const navigateToPokemonDetails = (name, data) => {
-    console.log('NAVIGATE');
     Navigation.push(props.componentId, {
       component: {
         name: DETAILS_SCREEN,
@@ -49,12 +54,36 @@ const Pokedex = props => {
     });
   };
 
+  useEffect(() => {
+    searchForPokemon(filter.toLowerCase()).then(result => {
+      if (result !== null) {
+        dispatch({
+          type: ADD_POKEMON,
+          payload: {
+            [filter]: result,
+          },
+        });
+      }
+    });
+  }, [filter]);
+
   return (
     <Layout>
+      <View style={styles.inputParent}>
+        <TextInput
+          value={filter}
+          onChangeText={setFilter}
+          placeholder="Search for pokemon..."
+          autoCapitalize={'none'}
+          autoComplete={'off'}
+        />
+      </View>
       {Object.values(pokemon).length > 0 && (
         <FlatList
           style={styles.container}
-          data={Object.values(pokemon)}
+          data={Object.values(pokemon).filter(
+            e => e.name.toLowerCase().indexOf(filter.toLowerCase()) > -1,
+          )}
           numColumns={1}
           horizontal={false}
           renderItem={({item}) => {

@@ -2,10 +2,19 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {getTextColor} from '../../util/colors';
 
-const Badge = ({text, color}) => {
+const Badge = ({text, color, size = 'sm'}) => {
   return (
     <View style={[{backgroundColor: color}, styles.badge]}>
-      <Text style={[{color: getTextColor(color)}]}>{text}</Text>
+      <Text
+        style={[
+          {
+            color: getTextColor(color),
+            fontSize: size === 'lg' ? 18 : 14,
+            letterSpacing: 1,
+          },
+        ]}>
+        {text}
+      </Text>
     </View>
   );
 };

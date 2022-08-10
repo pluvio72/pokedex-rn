@@ -24,9 +24,6 @@ Navigation.registerComponent(DETAILS_SCREEN, () => WrapperComponent(Details));
 
 function Setup() {
   Navigation.setDefaultOptions({
-    topBar: {
-      visible: false,
-    },
     bottomTabs: {
       visible: true,
       titleDisplayMode: 'alwaysShow',
@@ -49,9 +46,7 @@ function Setup() {
                     name: POKEDEX_SCREEN,
                     options: {
                       topBar: {
-                        title: {
-                          text: 'Pokedex',
-                        },
+                        visible: false,
                       },
                     },
                   },
@@ -76,6 +71,7 @@ function Setup() {
                       topBar: {
                         title: {
                           text: 'Details',
+                          visible: true,
                         },
                       },
                     },

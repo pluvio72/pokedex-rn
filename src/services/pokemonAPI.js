@@ -5,13 +5,33 @@ const GEN_ENDPOINT = 'https://pokeapi.co/api/v2/generation/';
 
 async function getPokemonByGeneration(_generation) {
   try {
-    const response = await fetch(
-      `https://pokeapi.co/api/v2/generation/${_generation}`,
-    );
+    const response = await fetch(`${GEN_ENDPOINT}${_generation}`);
     const json = await response.json();
     return json.pokemon_species;
   } catch (error) {
     console.log('Error fetching pokemon by generation.', error);
+  }
+}
+
+async function searchForPokemon(filter) {
+  try {
+    const response = await fetch(`${POKEMON_ENDPOINT}${filter}`);
+    const json = await response.json();
+    if (json.species) {
+      const response2 = await fetch(json.species.url);
+      const json2 = await response2.json();
+      const returnVal = Object.assign(
+        formatPokemonDetails(json),
+        formatPokemonBasicInfo(json2),
+      );
+      console.log('Return Val:', returnVal);
+      return returnVal;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log('Pokemon not found:', filter);
+    return null;
   }
 }
 
@@ -59,4 +79,4 @@ async function getPokemon(name, url) {
   return Object.assign(basicInfo, details);
 }
 
-export {getPokemonByGeneration, getPokemon};
+export {getPokemonByGeneration, getPokemon, searchForPokemon};
