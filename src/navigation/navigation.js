@@ -5,13 +5,12 @@ import {Navigation} from 'react-native-navigation';
 import Pokedex from '../screens/pokedex';
 import Details from '../screens/details';
 
-import {Provider} from 'react-redux';
-import store from '../redux/store';
+import Provider from '../redux/provider';
 
 function WrapperComponent(Component) {
   return function inject(props) {
     return (
-      <Provider store={store}>
+      <Provider>
         <Component {...props} />
       </Provider>
     );
@@ -19,14 +18,23 @@ function WrapperComponent(Component) {
 }
 
 // register screens
-Navigation.registerComponent(POKEDEX_SCREEN, () => WrapperComponent(Pokedex));
-Navigation.registerComponent(DETAILS_SCREEN, () => WrapperComponent(Details));
+Navigation.registerComponent(
+  POKEDEX_SCREEN,
+  () => WrapperComponent(Pokedex),
+  () => Pokedex,
+);
+Navigation.registerComponent(
+  DETAILS_SCREEN,
+  () => WrapperComponent(Details),
+  () => Details,
+);
 
 function Setup() {
   Navigation.setDefaultOptions({
     bottomTabs: {
       visible: true,
       titleDisplayMode: 'alwaysShow',
+      tabsAttachMode: 'onSwitchToTab',
     },
     bottomTab: {
       iconColor: 'rgb(115,116,117)',
@@ -48,17 +56,15 @@ function Setup() {
                       topBar: {
                         visible: false,
                       },
+                      bottomTab: {
+                        icon: require('../assets/icons/home25.png'),
+                        testID: 'FIRST_TAB_BAR_BUTTON',
+                        text: '',
+                      },
                     },
                   },
                 },
               ],
-              options: {
-                bottomTab: {
-                  icon: require('../assets/icons/home25.png'),
-                  testID: 'FIRST_TAB_BAR_BUTTON',
-                  text: '',
-                },
-              },
             },
           },
           {
@@ -74,17 +80,15 @@ function Setup() {
                           visible: true,
                         },
                       },
+                      bottomTab: {
+                        icon: require('../assets/icons/details25.png'),
+                        testID: 'SECOND_TAB_BAR_BUTTON',
+                        text: '',
+                      },
                     },
                   },
                 },
               ],
-              options: {
-                bottomTab: {
-                  icon: require('../assets/icons/details25.png'),
-                  testID: 'SECOND_TAB_BAR_BUTTON',
-                  text: '',
-                },
-              },
             },
           },
         ],

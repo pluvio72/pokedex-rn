@@ -1,21 +1,45 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image} from 'react-native';
-import {useSelector} from 'react-redux';
+import {Navigation} from 'react-native-navigation';
+import {connect, useSelector} from 'react-redux';
 import Badge from '../../components/badge';
 import Layout from '../../components/layout';
 import Select from '../../components/select';
 import colors, {darkenColor} from '../../util/colors';
 import styles from './details.styles';
 
+const selectPokemon = state => state.pokemon;
+
 const Details = props => {
-  const pokemon = useSelector(state => state.pokemon);
+  const pokemon = props.pokemon;
   const [selectedPokemon, setSelectedPokemon] = useState(
-    props.data ?? pokemon[Object.keys(pokemon)[0]],
+    props.data ?? Object.values(props.pokemon)[0],
   );
+  console.log('SELECTED:', selectedPokemon);
+
+  // useEffect(() => {
+  //   const listener = {
+  //     componentDidAppear: () => {
+  //       setSelectedPokemon();
+  //     },
+  //     componentDidDisappear: () => {
+  //       console.log('RNN', 'componentDidDisappear');
+  //     },
+  //   };
+  //   // Register the listener to all events related to our component
+  //   const unsubscribe = Navigation.events().registerComponentListener(
+  //     listener,
+  //     props.componentId,
+  //   );
+  //   return () => {
+  //     // Make sure to unregister the listener during cleanup
+  //     unsubscribe.remove();
+  //   };
+  // }, []);
 
   return (
     <Layout>
-      {pokemon && (
+      {selectedPokemon && (
         <View style={styles.container}>
           <Select
             options={Object.values(pokemon) ?? []}
@@ -110,4 +134,8 @@ const Details = props => {
   );
 };
 
-export default Details;
+const mapStateToProps = state => {
+  return {pokemon: state.pokemon};
+};
+
+export default connect(mapStateToProps)(Details);

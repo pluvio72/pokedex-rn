@@ -38,7 +38,7 @@ const Select = ({options, onSelect, defaultOption}) => {
           bounces={false}
           contentInset={{bottom: 12}}>
           {options.map(option => (
-            <Pressable onPress={() => selectOption(option)}>
+            <Pressable onPress={() => selectOption(option)} key={option.name}>
               <Text style={styles.option}>{option.name}</Text>
             </Pressable>
           ))}

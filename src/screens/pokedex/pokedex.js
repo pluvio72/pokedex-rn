@@ -1,11 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, TextInput, View} from 'react-native';
 import Layout from '../../components/layout';
-import {
-  getPokemon,
-  getPokemonByGeneration,
-  searchForPokemon,
-} from '../../services/pokemonAPI';
+import {searchForPokemon} from '../../services/pokemonAPI';
 import {useDispatch, useSelector} from 'react-redux';
 import {ADD_POKEMON} from '../../redux/actions';
 import styles from './pokedex.styles';
@@ -20,27 +16,6 @@ const Pokedex = props => {
   const pokemon = useSelector(selectPokemon);
 
   const [filter, setFilter] = useState('');
-
-  // GET POKEMON FROM FIRST GENERATION AND DISPATCH
-  // ACTION TO SAVE THEM TO STORE
-  useEffect(() => {
-    getPokemonByGeneration(1).then(pokemonList => {
-      if (pokemonList) {
-        for (let i = 0; i < pokemonList.length; i += 1) {
-          getPokemon(pokemonList[i].name, pokemonList[i].url).then(
-            pokemonData => {
-              dispatch({
-                type: ADD_POKEMON,
-                payload: {
-                  [pokemonData.name]: pokemonData,
-                },
-              });
-            },
-          );
-        }
-      }
-    });
-  }, []);
 
   const navigateToPokemonDetails = (name, data) => {
     Navigation.push(props.componentId, {
